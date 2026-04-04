@@ -1,0 +1,85 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "night time",
+      "intents": [
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent",   "samples": [] },
+        { "name": "AMAZON.StopIntent",   "samples": [] },
+        { "name": "AMAZON.PauseIntent",  "samples": [] },
+        { "name": "AMAZON.ResumeIntent", "samples": [] },
+        {
+          "name": "PlaySoundIntent",
+          "slots": [
+            {
+              "name": "sound",
+              "type": "SoundType"
+            }
+          ],
+          "samples": [
+            "play {sound}",
+            "start {sound}",
+            "play {sound} sounds",
+            "play {sound} sound",
+            "I want to hear {sound}",
+            "put on {sound}",
+            "turn on {sound}",
+            "start playing {sound}",
+            "I'd like to hear {sound}",
+            "let's hear {sound}"
+          ]
+        },
+        {
+          "name": "ListSoundsIntent",
+          "slots": [],
+          "samples": [
+            "what sounds are available",
+            "list sounds",
+            "list all sounds",
+            "what can you play",
+            "what are my options",
+            "what sounds do you have",
+            "show me the sounds"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "SoundType",
+          "values": [
+            {
+              "name": {
+                "value": "rain",
+                "synonyms": ["raining", "rainfall", "rainy"]
+              }
+            },
+            {
+              "name": {
+                "value": "thunderstorm",
+                "synonyms": ["thunder", "storm", "thunder and lightning", "lightning", "thunderstorms"]
+              }
+            },
+            {
+              "name": {
+                "value": "ocean waves",
+                "synonyms": ["ocean", "waves", "sea", "beach", "the ocean", "the waves"]
+              }
+            },
+            {
+              "name": {
+                "value": "jungle",
+                "synonyms": ["forest", "rainforest", "nature", "wildlife"]
+              }
+            },
+            {
+              "name": {
+                "value": "city sounds",
+                "synonyms": ["city", "urban", "street sounds", "traffic", "the city"]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

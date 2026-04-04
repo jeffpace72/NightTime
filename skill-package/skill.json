@@ -1,0 +1,48 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "Night Time",
+          "summary": "Play relaxing ambient sounds: rain, thunderstorm, ocean waves, jungle, and city sounds.",
+          "description": "Night Time plays soothing ambient sounds to help you relax and fall asleep. Choose from rain, thunderstorm, ocean waves, jungle, or city sounds. All sounds loop seamlessly until you say stop.",
+          "examplePhrases": [
+            "Alexa, open night time",
+            "Alexa, ask night time to play rain",
+            "Alexa, ask night time to play ocean waves"
+          ],
+          "keywords": [
+            "sleep",
+            "ambient",
+            "relaxing",
+            "rain",
+            "nature",
+            "white noise",
+            "sounds"
+          ],
+          "smallIconUri": "https://nighttime-skill-audio.s3.amazonaws.com/icons/icon_108_A2Z.png",
+          "largeIconUri": "https://nighttime-skill-audio.s3.amazonaws.com/icons/icon_512_A2Z.png"
+        }
+      },
+      "isAvailableWorldwide": false,
+      "testingInstructions": "Open the skill and say 'play rain' to test audio playback. Say 'stop' to end.",
+      "category": "SELF_IMPROVEMENT",
+      "distributionCountries": [
+        "US"
+      ]
+    },
+    "apis": {
+      "custom": {
+        "interfaces": [
+          {
+            "type": "AUDIO_PLAYER"
+          }
+        ],
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:875378932855:function:ask-nighttime-default-default-1775318183129"
+        }
+      }
+    },
+    "manifestVersion": "1.0"
+  }
+}

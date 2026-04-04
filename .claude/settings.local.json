@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(winget upgrade:*)",
+      "WebSearch",
+      "Bash(aws --version)",
+      "Bash(ask --version)",
+      "Bash(npm --version)",
+      "Bash(winget install:*)",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH:/c/Program Files/Amazon/AWSCLIV2\")",
+      "Bash(npm install:*)",
+      "Bash(export PATH=\"/c/Program Files/nodejs:/c/Users/jeffp/AppData/Roaming/npm:$PATH:/c/Program Files/Amazon/AWSCLIV2\")",
+      "Bash(aws sts:*)",
+      "Bash(ask configure:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "Read(//c/Users/jeffp/.ask/**)"
+    ]
+  }
+}
