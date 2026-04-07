@@ -8,7 +8,8 @@
       "Action": "s3:GetObject",
       "Resource": [
         "arn:aws:s3:::nighttime-skill-audio/audio/*",
-        "arn:aws:s3:::nighttime-skill-audio/icons/*"
+        "arn:aws:s3:::nighttime-skill-audio/icons/*",
+        "arn:aws:s3:::nighttime-skill-audio/images/*"
       ]
     }
   ]

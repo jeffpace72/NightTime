@@ -30,6 +30,12 @@ const SOUNDS = {
     url: `${BUCKET_URL}/audio/city-sounds.mp3`,
     title: 'City Sounds',
     subtitle: 'Urban city ambience'
+  },
+  'reality check': {
+    key: 'reality-check',
+    url: `${BUCKET_URL}/audio/reality-check.mp3`,
+    title: 'Reality Check',
+    subtitle: 'Grounding and presence'
   }
 };
 
@@ -51,7 +57,10 @@ const SYNONYM_MAP = {
   city: 'city sounds',
   urban: 'city sounds',
   traffic: 'city sounds',
-  street: 'city sounds'
+  street: 'city sounds',
+  'reality-check': 'reality check',
+  grounding: 'reality check',
+  presence: 'reality check'
 };
 
 function resolveSound(slotValue) {
@@ -64,4 +73,4 @@ function resolveSound(slotValue) {
 
 const SOUND_LIST = Object.values(SOUNDS);
 
-module.exports = { SOUNDS, SOUND_LIST, resolveSound };
+module.exports = { SOUNDS, SOUND_LIST, resolveSound, BUCKET_URL };

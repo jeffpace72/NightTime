@@ -4,12 +4,13 @@
       "locales": {
         "en-US": {
           "name": "Night Time",
-          "summary": "Play relaxing ambient sounds: rain, thunderstorm, ocean waves, jungle, and city sounds.",
-          "description": "Night Time plays soothing ambient sounds to help you relax and fall asleep. Choose from rain, thunderstorm, ocean waves, jungle, or city sounds. All sounds loop seamlessly until you say stop.",
+          "summary": "Play relaxing ambient sounds: rain, thunderstorm, ocean waves, jungle, city sounds, and reality check.",
+          "description": "Night Time plays soothing ambient sounds to help you relax and fall asleep. Choose from rain, thunderstorm, ocean waves, jungle, city sounds, or reality check. All sounds loop seamlessly until you say stop.",
           "examplePhrases": [
             "Alexa, open night time",
             "Alexa, ask night time to play rain",
-            "Alexa, ask night time to play ocean waves"
+            "Alexa, ask night time to play ocean waves",
+            "Alexa, ask night time to play reality check"
           ],
           "keywords": [
             "sleep",
@@ -36,6 +37,35 @@
         "interfaces": [
           {
             "type": "AUDIO_PLAYER"
+          },
+          {
+            "type": "ALEXA_PRESENTATION_APL",
+            "supportedViewports": [
+              {
+                "mode": "HUB",
+                "shape": "ROUND",
+                "minWidth": 480,
+                "maxWidth": 480,
+                "minHeight": 480,
+                "maxHeight": 480
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minWidth": 960,
+                "maxWidth": 1280,
+                "minHeight": 480,
+                "maxHeight": 800
+              },
+              {
+                "mode": "HUB",
+                "shape": "RECTANGLE",
+                "minWidth": 1920,
+                "maxWidth": 1920,
+                "minHeight": 1080,
+                "maxHeight": 1080
+              }
+            ]
           }
         ],
         "endpoint": {

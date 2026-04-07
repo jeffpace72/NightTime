@@ -1,5 +1,11 @@
 const Alexa = require('ask-sdk-core');
-const { resolveSound, SOUND_LIST } = require('./audioAssets');
+const { resolveSound, SOUND_LIST, BUCKET_URL } = require('./audioAssets');
+const launchDocument = require('./launchDocument.json');
+
+function supportsAPL(handlerInput) {
+  const interfaces = ((handlerInput.requestEnvelope.context.System || {}).device || {}).supportedInterfaces;
+  return interfaces && interfaces['Alexa.Presentation.APL'];
+}
 
 // ─── Launch ───────────────────────────────────────────────────────────────────
 
@@ -9,10 +15,26 @@ const LaunchRequestHandler = {
   },
   handle(handlerInput) {
     const soundNames = SOUND_LIST.map(s => s.title).join(', ');
-    return handlerInput.responseBuilder
+    const builder = handlerInput.responseBuilder
       .speak(`Welcome to Night Time. I can play: ${soundNames}. Which would you like to hear?`)
-      .reprompt('Which sound would you like? Say a sound name, or say list sounds for your options.')
-      .getResponse();
+      .reprompt('Which sound would you like? Say a sound name, or say list sounds for your options.');
+
+    if (supportsAPL(handlerInput)) {
+      builder.addDirective({
+        type: 'Alexa.Presentation.APL.RenderDocument',
+        token: 'launchToken',
+        document: launchDocument,
+        datasources: {
+          data: {
+            title: 'Night Time',
+            subtitle: 'Say a sound name to begin',
+            backgroundUrl: `${BUCKET_URL}/images/app_launch.jpg`
+          }
+        }
+      });
+    }
+
+    return builder.getResponse();
   }
 };
 
@@ -121,6 +143,7 @@ const StopCancelIntentHandler = {
     return handlerInput.responseBuilder
       .speak('Goodnight.')
       .addAudioPlayerStopDirective()
+      .withShouldEndSession(true)
       .getResponse();
   }
 };

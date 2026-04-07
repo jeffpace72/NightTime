@@ -76,6 +76,12 @@
                 "value": "city sounds",
                 "synonyms": ["city", "urban", "street sounds", "traffic", "the city"]
               }
+            },
+            {
+              "name": {
+                "value": "reality check",
+                "synonyms": ["reality-check", "reality check", "grounding", "presence"]
+              }
             }
           ]
         }
