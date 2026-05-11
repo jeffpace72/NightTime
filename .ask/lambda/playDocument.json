@@ -1,0 +1,26 @@
+{
+  "type": "APL",
+  "version": "2024.3",
+  "theme": "dark",
+  "mainTemplate": {
+    "parameters": ["payload"],
+    "items": [
+      {
+        "type": "Container",
+        "width": "100vw",
+        "height": "100vh",
+        "items": [
+          {
+            "type": "Image",
+            "width": "100vw",
+            "height": "100vh",
+            "position": "absolute",
+            "scale": "best-fill",
+            "source": "${payload.data.backgroundUrl}",
+            "opacity": 0.5
+          }
+        ]
+      }
+    ]
+  }
+}

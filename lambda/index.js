@@ -1,6 +1,15 @@
 const Alexa = require('ask-sdk-core');
-const { resolveSound, SOUND_LIST, BUCKET_URL } = require('./audioAssets');
+const {
+  resolveSound,
+  SOUND_LIST,
+  BUCKET_URL,
+  INTRO_MP3_URL,
+  audioMetadataForSound,
+  streamToken,
+  soundFromStreamToken
+} = require('./audioAssets');
 const launchDocument = require('./launchDocument.json');
+const playDocument = require('./playDocument.json');
 
 function supportsAPL(handlerInput) {
   const interfaces = ((handlerInput.requestEnvelope.context.System || {}).device || {}).supportedInterfaces;
@@ -15,8 +24,9 @@ const LaunchRequestHandler = {
   },
   handle(handlerInput) {
     const soundNames = SOUND_LIST.map(s => s.title).join(', ');
+    const welcome = `Welcome to Night Time. I can play: ${soundNames}. Which would you like to hear?`;
     const builder = handlerInput.responseBuilder
-      .speak(`Welcome to Night Time. I can play: ${soundNames}. Which would you like to hear?`)
+      .speak(`<speak><audio src="${INTRO_MP3_URL}"/>${welcome}</speak>`)
       .reprompt('Which sound would you like? Say a sound name, or say list sounds for your options.');
 
     if (supportsAPL(handlerInput)) {
@@ -28,7 +38,7 @@ const LaunchRequestHandler = {
           data: {
             title: 'Night Time',
             subtitle: 'Say a sound name to begin',
-            backgroundUrl: `${BUCKET_URL}/images/app_launch.jpg`
+            backgroundUrl: `${BUCKET_URL}/images/app_launch.png`
           }
         }
       });
@@ -57,13 +67,25 @@ const PlaySoundIntentHandler = {
         .getResponse();
     }
 
-    return handlerInput.responseBuilder
+    const builder = handlerInput.responseBuilder
       .speak(`Playing ${sound.title}.`)
-      .addAudioPlayerPlayDirective('REPLACE_ALL', sound.url, sound.key, 0, null, {
-        title: sound.title,
-        subtitle: sound.subtitle
-      })
-      .getResponse();
+      .addAudioPlayerPlayDirective(
+        'REPLACE_ALL', sound.url, streamToken(sound), 0, null, audioMetadataForSound(sound)
+      )
+      .withShouldEndSession(true);
+
+    if (supportsAPL(handlerInput)) {
+      builder.addDirective({
+        type: 'Alexa.Presentation.APL.RenderDocument',
+        token: 'playingToken',
+        document: playDocument,
+        datasources: {
+          data: { backgroundUrl: sound.backgroundUrl }
+        }
+      });
+    }
+
+    return builder.getResponse();
   }
 };
 
@@ -93,6 +115,8 @@ const PauseIntentHandler = {
   handle(handlerInput) {
     return handlerInput.responseBuilder
       .addAudioPlayerStopDirective()
+      .addAudioPlayerClearQueueDirective('CLEAR_ALL')
+      .withShouldEndSession(true)
       .getResponse();
   }
 };
@@ -116,7 +140,7 @@ const ResumeIntentHandler = {
         .getResponse();
     }
 
-    const sound = SOUND_LIST.find(s => s.key === token);
+    const sound = soundFromStreamToken(token);
     if (!sound) {
       return handlerInput.responseBuilder
         .speak('I could not resume. Which sound would you like to play?')
@@ -125,9 +149,24 @@ const ResumeIntentHandler = {
     }
 
     const offsetInMilliseconds = handlerInput.requestEnvelope.context.AudioPlayer.offsetInMilliseconds || 0;
-    return handlerInput.responseBuilder
-      .addAudioPlayerPlayDirective('REPLACE_ALL', sound.url, sound.key, offsetInMilliseconds)
-      .getResponse();
+    const builder = handlerInput.responseBuilder
+      .addAudioPlayerPlayDirective(
+        'REPLACE_ALL', sound.url, streamToken(sound), offsetInMilliseconds, null, audioMetadataForSound(sound)
+      )
+      .withShouldEndSession(true);
+
+    if (supportsAPL(handlerInput)) {
+      builder.addDirective({
+        type: 'Alexa.Presentation.APL.RenderDocument',
+        token: 'playingToken',
+        document: playDocument,
+        datasources: {
+          data: { backgroundUrl: sound.backgroundUrl }
+        }
+      });
+    }
+
+    return builder.getResponse();
   }
 };
 
@@ -143,6 +182,7 @@ const StopCancelIntentHandler = {
     return handlerInput.responseBuilder
       .speak('Goodnight.')
       .addAudioPlayerStopDirective()
+      .addAudioPlayerClearQueueDirective('CLEAR_ALL')
       .withShouldEndSession(true)
       .getResponse();
   }
@@ -175,12 +215,12 @@ const AudioPlayerEventHandler = {
 
     if (requestType === 'AudioPlayer.PlaybackNearlyFinished') {
       const token = handlerInput.requestEnvelope.request.token;
-      const sound = SOUND_LIST.find(s => s.key === token);
+      const sound = soundFromStreamToken(token);
 
       if (sound) {
         // Re-enqueue the same track for seamless looping
         return handlerInput.responseBuilder
-          .addAudioPlayerPlayDirective('ENQUEUE', sound.url, sound.key, 0, token)
+          .addAudioPlayerPlayDirective('ENQUEUE', sound.url, streamToken(sound), 0, token, audioMetadataForSound(sound))
           .getResponse();
       }
     }

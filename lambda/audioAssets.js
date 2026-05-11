@@ -1,5 +1,8 @@
 const BUCKET_URL = process.env.S3_BUCKET_URL || 'https://nighttime-skill-audio.s3.amazonaws.com';
 
+/** Short clip played before launch speech (SSML `<audio>`). Host at audio/intro.mp3 on the bucket. */
+const INTRO_MP3_URL = `${BUCKET_URL}/audio/intro.mp3`;
+
 const SOUNDS = {
   rain: {
     key: 'rain',
@@ -39,6 +42,11 @@ const SOUNDS = {
   }
 };
 
+// Full-screen art while this track plays (Echo Show / Fire TV). Host at images/{key}.png on the same bucket.
+for (const sound of Object.values(SOUNDS)) {
+  sound.backgroundUrl = `${BUCKET_URL}/images/${sound.key}.png`;
+}
+
 const SYNONYM_MAP = {
   raining: 'rain',
   rainfall: 'rain',
@@ -73,4 +81,50 @@ function resolveSound(slotValue) {
 
 const SOUND_LIST = Object.values(SOUNDS);
 
-module.exports = { SOUNDS, SOUND_LIST, resolveSound, BUCKET_URL };
+/**
+ * Stream token used in AudioPlayer.Play. Prefix bumps invalidate Alexa metadata cache
+ * (same logical track key used to cache art/title for up to ~5 days).
+ */
+const STREAM_TOKEN_PREFIX = 'ntv6:';
+
+function streamToken(sound) {
+  return `${STREAM_TOKEN_PREFIX}${sound.key}`;
+}
+
+function soundFromStreamToken(token) {
+  if (!token) return null;
+  if (token.startsWith(STREAM_TOKEN_PREFIX)) {
+    const key = token.slice(STREAM_TOKEN_PREFIX.length);
+    return SOUND_LIST.find(s => s.key === key) || null;
+  }
+  return SOUND_LIST.find(s => s.key === token) || null;
+}
+
+const TRANSPARENT_ART_URL = `${BUCKET_URL}/images/transparent.png`;
+
+/** Now Playing screen: background only, all chrome minimized. */
+function audioMetadataForSound(sound) {
+  return {
+    title: ' ',
+    subtitle: ' ',
+    art: {
+      contentDescription: sound.title,
+      sources: [{ url: TRANSPARENT_ART_URL }]
+    },
+    backgroundImage: {
+      contentDescription: sound.title,
+      sources: [{ url: sound.backgroundUrl }]
+    }
+  };
+}
+
+module.exports = {
+  SOUNDS,
+  SOUND_LIST,
+  resolveSound,
+  BUCKET_URL,
+  INTRO_MP3_URL,
+  audioMetadataForSound,
+  streamToken,
+  soundFromStreamToken
+};
