@@ -1,0 +1,2 @@
+# Alexa Skills Kit CLI: local deploy state (skill IDs, Lambda/IAM ARNs)
+.ask/ask-states.json
